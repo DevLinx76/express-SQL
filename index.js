@@ -58,7 +58,7 @@ app.delete('/api/notes/:id', async (req, res, next) => {
 // Error handling
 const init = async() => {
     await client.connect();
-    console.log('connected to the database');
+    
     
     // Drop tables
     let SQL = ``;
@@ -69,22 +69,21 @@ const init = async() => {
     SQL = `     
         DROP TABLE IF EXISTS notes;
 
-        CREATE TABLE notes(
-        id SERIAL PRIMARY KEY,
-        created_at TIMESTAMP DEFAULT now(),
-        updated_at TIMESTAMP DEFAULT now(),
-        ranking INTEGER DEFAULT 3 NOT NULL,
-        txt VARCHAR(255) NOT NULL 
-    );`
+        CREATE TABLE notes (            
+            id SERIAL PRIMARY KEY,
+            created_at TIMESTAMP DEFAULT now(),
+            updated_at TIMESTAMP DEFAULT now(),
+            ranking INTEGER NOT NULL DEFAULT 3,
+            txt VARCHAR(255) NOT NULL);
+        `
 
      // Seed data
     SQL = ` 
         INSERT INTO notes(txt, ranking) VALUES('learn express', 5);
         INSERT INTO notes(txt, ranking) VALUES('write SQL queries', 4);
         INSERT INTO notes(txt, ranking) VALUES('create routes', 2);
-    `
-    await client.query(SQL);    
-    console.log('data seeded');    
+    `       
+    console.log('connected to the database');    
     
     // Start the server
     const PORT = process.env.PORT || 3000;
